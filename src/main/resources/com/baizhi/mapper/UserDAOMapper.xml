@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.UserDAO">
+    
+    <sql id="userField">
+    	id, username, password, photopath, createDate, role
+    </sql>
+    
+    <select id="queryUser" resultType="User">
+    	select <include refid="userField"/>  from t_user where 
+    	username = #{username}
+    </select>
+    
+    
+    <insert id="save" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+    	insert into t_user values (#{id}, #{username}, #{password}, #{photopath,jdbcType=VARCHAR}, #{createDate}, #{role}) 
+    </insert>
+    
+</mapper>
+
+
+
+
+
+
+
+

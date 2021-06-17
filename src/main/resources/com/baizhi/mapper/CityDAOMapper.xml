@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.CityDAO">
+  	
+  	
+
+  	<insert id="save" parameterType="city" useGeneratedKeys="true" keyProperty="id">
+  		insert into t_city values (#{id},#{name})
+  	</insert>
+  	
+  	
+  	<select id="queryAll" resultType="city">
+  		select id,name from t_city
+  	</select>
+
+
+	<delete id="delete" parameterType="Integer">
+		delete from t_city where id = #{id}
+	</delete>
+  
+</mapper>

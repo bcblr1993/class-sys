@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.StudentDAO">
+  	
+
+  	
+  	<resultMap type="student" id="studentResultMap">
+  		<id column="id" property="id"/>
+  		<result column="name" property="name"/>
+  		<result column="age" property="age"/>
+  		<result column="qq" property="qq"/>
+  		<result column="phone" property="phone"/>
+  		<result column="bir" property="bir"/>
+  		<result column="starts" property="starts"/>
+  		<result column="attr" property="attr"/>
+  		<result column="mark" property="mark"/>
+  		<association property="clazz" javaType="com.baizhi.entity.Clazz">
+  			<id column="cid" property="id"/>
+  			<result column="cname" property="name"/>
+  		</association>
+  		<association property="group" javaType="com.baizhi.entity.Group">
+  			<id column="gid" property="id"/>
+  			<result column="gname" property="name"/>
+  		</association>
+  		<association property="city" javaType="com.baizhi.entity.City">
+  			<id column="ctid" property="id"/>
+  			<result column="ctname" property="name"/>
+  		</association>
+  		<collection property="tags" javaType="list" ofType="com.baizhi.entity.Tag">
+  			<id column="taid" property="id"/>
+  			<result column="taname" property="name"/>
+  		</collection>
+  	</resultMap>
+  	
+  
+  	<insert id="save" parameterType="student" useGeneratedKeys="true" keyProperty="id">
+  		insert into t_student values (#{id},#{name},#{age},#{qq},#{phone},#{bir},#{starts},#{attr},#{mark},#{clazz.id,jdbcType=VARCHAR},#{group.id,jdbcType=VARCHAR},#{city.id,jdbcType=VARCHAR})
+  	</insert>
+  	
+  	
+  	<select id="queryAll" resultMap="studentResultMap">
+  		select s.id,s.name,s.age,s.qq,s.phone,s.bir,s.starts,s.attr,s.mark,
+			c.id as cid,c.name as cname,
+			g.id as gid,g.name as gname,
+			ct.id as ctid,ct.name as ctname,
+			ta.id as taid,ta.name as taname
+			from t_student s
+			left join t_clazz c
+			on s.clazzId = c.id
+			left join t_group g
+			on s.groupId = g.id
+			left join t_city ct
+			on s.cityId = ct.id
+			left join t_student_tag st
+			on s.id = st.sid
+			left join t_tag ta
+			on st.tid = ta.id
+  	</select>
+
+	<select id="queryByPage" resultMap="studentResultMap">
+  		select s.id,s.name,s.age,s.qq,s.phone,s.bir,s.starts,s.attr,s.mark,
+			c.id as cid,c.name as cname,
+			g.id as gid,g.name as gname,
+			ct.id as ctid,ct.name as ctname,
+			ta.id as taid,ta.name as taname
+		from (select * from t_student
+			<where>
+				<if test="colValue!=null and colValue!=''">
+					${colName} like concat('%',#{colValue},'%')
+				</if>
+			</where>
+		limit #{start},#{rows}) s
+		left join t_clazz c
+		on s.clazzId = c.id
+		left join t_group g
+		on s.groupId = g.id
+		left join t_city ct
+		on s.cityId = ct.id
+		left join t_student_tag st
+		on s.id = st.sid
+		left join t_tag ta
+		on st.tid = ta.id
+  	</select>
+
+	<select id="queryTotalCount" resultType="Long">
+		select count(s.id)
+		from t_student s
+		<where>
+			<if test="colValue!=null and colValue!=''">
+				${colName} like concat('%',#{colValue},'%')
+			</if>
+		</where>
+	</select>
+  	
+  	
+  	<select id="queryOneStudentById" resultMap="studentResultMap">
+  		select s.id,s.name,s.age,s.qq,s.phone,s.bir,s.starts,s.attr,s.mark,
+			c.id as cid,c.name as cname,
+			g.id as gid,g.name as gname,
+			ct.id as ctid,ct.name as ctname,
+			ta.id as taid,ta.name as taname
+			from t_student s
+			left join t_clazz c
+			on s.clazzId = c.id 
+			left join t_group g
+			on s.groupId = g.id
+			left join t_city ct
+			on s.cityId = ct.id
+			left join t_student_tag st
+			on s.id = st.sid
+			left join t_tag ta
+			on st.tid = ta.id
+			where s.id = #{id}
+  	</select>
+  	
+  	
+  	
+  	<select id="queryByGroupId" parameterType="string" resultMap="studentResultMap">
+  		select
+			s.id,
+			s.name,
+			s.age,
+			s.qq,
+			s.phone,
+			s.bir,
+			s.starts,
+			s.attr,
+			s.mark,
+			t.id as taid,
+			t.name taname
+		from
+			t_student s
+		left join t_student_tag st on s.id = st.sid
+		left join t_tag t on st.tid = t.id
+		where
+			s.groupid = #{groupid}
+  	</select>
+  	
+  	<update id="update" parameterType="student">
+  		update t_student set 
+  			name=#{name},age=#{age},qq=#{qq},phone=#{phone},bir=#{bir},starts=#{starts},attr=#{attr},mark=#{mark},
+  			clazzId=#{clazz.id},groupId=#{group.id},cityId=#{city.id}
+  		where id = #{id}
+  	</update>
+  	
+  	<delete id="delete" parameterType="String">
+  		delete from t_student  where id = #{id}
+  	</delete>
+  	
+  
+</mapper>

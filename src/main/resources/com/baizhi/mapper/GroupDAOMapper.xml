@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.GroupDAO">
+  	
+  	
+  	<resultMap type="group" id="groupResultMap">
+  		<id column="id" property="id"/>
+  		<result column="name" property="name"/>
+  		<result column="createDate" property="createDate"/>
+  		<association property="clazz" javaType="com.baizhi.entity.Clazz">
+  			<id column="cid" property="id"/>
+  			<result column="cname" property="name"/>
+  		</association>
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="group" useGeneratedKeys="true" keyProperty="id">
+  		insert into t_group values (#{id},#{name},#{createDate},#{clazz.id})
+  	</insert>
+  	
+  	<select id="queryAll" resultMap="groupResultMap">
+		select g.id,g.name,g.createDate, c.id as cid ,c.name as cname
+			from t_group g
+			left join t_clazz c
+			on g.clazzId  = c.id 		
+  	</select>
+  	
+  	
+  	<select id="queryGroupsByClazzId" parameterType="string" resultType="group">
+  		select g.id,g.name,g.createDate from t_group g where g.clazzId = #{clazzId}
+  	</select>
+  	
+  
+  	
+  
+</mapper>

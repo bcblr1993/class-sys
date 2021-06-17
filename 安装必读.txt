@@ -1,0 +1,12 @@
+1.安装mysql数据库
+  用户名 root  密码:root
+
+2.在mysql中新建 baizhi_sys 编码为UTF-8的数据库
+  初始化库表结构
+
+3.启动项目
+	java -jar  baizhi_sys.jar  
+	--spring.config.location=./application.properties    
+
+4.访问项目首页
+	http://localhost:8081

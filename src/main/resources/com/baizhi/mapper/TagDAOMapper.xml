@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.TagDAO">
+
+  	<!-- sql语句复用 -->
+  	<sql id="tagField">
+  		id,name,type,createDate
+  	</sql>
+  
+  	<insert id="save" parameterType="tag" useGeneratedKeys="true" keyProperty="id">
+  		insert into t_tag values (#{id},#{name},#{type},#{createDate})
+  	</insert>
+  	
+  	
+  	<select id="queryAll" resultType="tag">
+  		select <include refid="tagField"/> from t_tag
+  	</select>
+  	
+  	<select id="queryByTagType" resultType="tag">
+  		select <include refid="tagField"/> from t_tag where type = #{type}
+  	</select>
+
+	<delete id="delete" parameterType="Integer">
+		delete from t_tag where id = #{id}
+	</delete>
+  
+</mapper>
